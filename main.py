@@ -1,3 +1,5 @@
+import random
+
 def pretty_print(mas):
     print('-' * 10)
     for row in mas:
@@ -9,6 +11,19 @@ def get_number_from_index(i, j):
     return 4 * i + j + 1
 
 
+def get_index_from_number(num):
+    num -= 1
+    x, y = num // 4, num % 4
+    return x, y
+
+def insert_2_or_4(mas, x, y):
+    if random.random() <= 0.75:
+        mas[x][y] = 2
+    else:
+        mas[x][y] = 4
+    return mas
+
+
 def get_empty_list(mas):
     empty = []
     for i in range(4):
@@ -17,6 +32,9 @@ def get_empty_list(mas):
                 num = get_number_from_index(i, j)
                 empty.append(num)
     return empty
+
+def is_zero_in_mas(mas):
+    pass
 
 
 mas = [
@@ -30,3 +48,14 @@ mas[1][2] = 2
 mas[3][0] = 4
 print(get_empty_list(mas))
 pretty_print(mas)
+
+
+while True:
+    input()
+    empty = get_empty_list(mas)
+    random.shuffle(empty)
+    random_num = empty.pop()
+    x, y = get_index_from_number(random_num)
+    mas = insert_2_or_4(mas, x, y)
+    print(f'Заполнен элемент под номером: {random_num}')
+    pretty_print(mas)
