@@ -1,6 +1,6 @@
 import unittest
-from main import get_number_from_index, get_empty_list, get_index_from_number, \
-is_zero_in_mas
+from logics import get_number_from_index, get_empty_list, get_index_from_number, \
+    is_zero_in_mas
 
 
 class Test_2048(unittest.TestCase):
@@ -80,5 +80,6 @@ class Test_2048(unittest.TestCase):
         ]
         self.assertEqual(is_zero_in_mas(mas), True)
 
-if __name__=='main':
+
+if __name__ == 'main':
     unittest.main()
