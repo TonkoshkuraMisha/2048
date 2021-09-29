@@ -2,9 +2,10 @@ import pygame
 import sys
 from logics import *
 
+
 def draw_interface():
     pygame.draw.rect(screen, WHITE, TITLE_REC)
-    font = pygame.font.SysFont("stxingkai", 70)
+    font = pygame.font.SysFont('Arial Black', 50)
     pretty_print(mas)
     for row in range(BLOCKS):
         for column in range(BLOCKS):
@@ -18,6 +19,7 @@ def draw_interface():
                 text_x = w + (SIZE_BLOCK - font_w) / 2
                 text_y = h + (SIZE_BLOCK - font_h) / 2
                 screen.blit(text, (text_x, text_y))
+
 
 mas = [
     [0, 0, 0, 0],
@@ -62,13 +64,22 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("2048")
 draw_interface()
 pygame.display.update()
-while is_zero_in_mas(mas):
+while is_zero_in_mas(mas) or can_move(mas):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit(0)
 
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                mas = move_left(mas)
+            elif event.key == pygame.K_RIGHT:
+                mas = move_right(mas)
+            elif event.key == pygame.K_UP:
+                mas = move_up(mas)
+            elif event.key == pygame.K_DOWN:
+                mas = move_down(mas)
+
             empty = get_empty_list(mas)
             random.shuffle(empty)
             random_num = empty.pop()
