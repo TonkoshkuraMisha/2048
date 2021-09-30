@@ -9,14 +9,17 @@ create table if not exists RECORDS (
     score integer
 )""")
 
-cursor.execute("""
-SELECT name user, max(score) score FROM RECORDS
-GROUP by name
-ORDER by score DESC
-LIMIT 3
-""")
+def get_best():
+    cursor.execute("""
+    SELECT name user, max(score) score FROM RECORDS
+    GROUP by name
+    ORDER by score DESC
+    LIMIT 3
+    """)
+    return cursor.fetchall()
 
-results = cursor.fetchall()
-print(results)
 
-cursor.close()
+print(get_best())
+
+#cursor.close()
+

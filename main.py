@@ -1,6 +1,22 @@
 import pygame
 import sys
 from logics import *
+from database import get_best, cursor
+
+
+BEST_USERS = get_best()
+
+def draw_top_users():
+    font_result = pygame.font.SysFont('simsun', 42)
+    font_user = pygame.font.SysFont('simsun', 36)
+    text_header = font_result.render('Best scores: ', True, COLOR_TEXT)
+    screen.blit(text_header, (400, 5))
+    for index, user in enumerate(BEST_USERS):
+        user_name, user_score = user
+        s = f"{index+1}. {user_name}: {user_score}"
+        text_user = font_user.render(s, True, COLOR_TEXT)
+        screen.blit(text_user, (400, 40 + 30*index))
+        print(index, user_name, user_score)
 
 
 def draw_interface(SCORE, delta=0):
@@ -16,6 +32,7 @@ def draw_interface(SCORE, delta=0):
         text_delta = font_delta.render(f'+{delta}', True, COLOR_TEXT)
         screen.blit(text_delta, (250, 90))
     pretty_print(mas)
+    draw_top_users()
     for row in range(BLOCKS):
         for column in range(BLOCKS):
             value = mas[row][column]
@@ -58,16 +75,21 @@ GRAY = (128, 128, 128)
 
 BLOCKS = 4
 SIZE_BLOCK = 140
-MARGIN = 15
+MARGIN = 10
 WIDTH = BLOCKS * SIZE_BLOCK + (BLOCKS + 1) * MARGIN
 HEIGHT = WIDTH + 140
 TITLE_REC = pygame.Rect(0, 0, WIDTH, 140)
 SCORE = 0
+USER_NAME = None
 
 mas[1][2] = 2
 mas[3][0] = 4
+
 print(get_empty_list(mas))
 pretty_print(mas)
+
+# for user in get_best():
+#   print(user)
 
 pygame.init()
 
@@ -78,6 +100,51 @@ pygame.display.set_icon(my_icon)
 background_music = pygame.mixer.Sound('sounds\\Daft_Punk_Solar_Sailer.wav')
 background_music.play(loops=-1)
 sound_effect = pygame.mixer.Sound('sounds\\my_new_sound.wav')
+
+
+def draw_intro():
+    # my_image = pygame.image.load('images\\title.png')
+    my_image = pygame.image.load('images\\wallpaper.jpg')
+    my_font = pygame.font.SysFont('Arial Black', 60)
+    text_welcome = my_font.render('Welcome, User!', True, WHITE)
+    name = 'text'
+    is_find_name = False
+    while not is_find_name:
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            elif event.type == pygame.KEYDOWN:
+                if event.unicode.isalpha():
+                    name += event.unicode
+                elif event.key == pygame.K_BACKSPACE:
+                    name = name[:-1]
+                elif event.key == pygame.K_SPACE:
+                    name += event.unicode
+                elif event.key == pygame.K_RETURN:
+                    if len(name) > 2:
+                        global USER_NAME
+                        USER_NAME = name
+                        is_find_name = True
+                        break
+
+        screen.fill(BLACK)
+        text_name = my_font.render(name, True, WHITE)
+        rect_name = text_name.get_rect()
+        rect_name.center = screen.get_rect().center
+
+        screen.blit(pygame.transform.scale(my_image, [1920, 1080]), [0, -200])
+        screen.blit(text_welcome, (50, 15))
+        screen.blit(text_name, rect_name)
+        pygame.display.update()
+    screen.fill(BLACK)
+
+
+draw_intro()
+
+
 
 
 draw_interface(SCORE)
@@ -111,3 +178,4 @@ while is_zero_in_mas(mas) or can_move(mas):
             print(f'Заполнен элемент под номером: {random_num}')
             draw_interface(SCORE, delta)
             pygame.display.update()
+    print(USER_NAME)
