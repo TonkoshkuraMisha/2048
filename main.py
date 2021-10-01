@@ -99,7 +99,7 @@ my_icon = pygame.image.load('images\\title.png')
 pygame.display.set_icon(my_icon)
 background_music = pygame.mixer.Sound('sounds\\Daft_Punk_Solar_Sailer.wav')
 background_music.play(loops=-1)
-sound_effect = pygame.mixer.Sound('sounds\\my_new_sound.wav')
+sound_effect = pygame.mixer.Sound('sounds\\button_press.wav')
 
 
 def draw_intro():
@@ -107,18 +107,20 @@ def draw_intro():
     my_image = pygame.image.load('images\\wallpaper.jpg')
     my_font = pygame.font.SysFont('Arial Black', 60)
     text_welcome = my_font.render('Welcome, User!', True, WHITE)
-    name = 'text'
+    name = 'Enter name: '
     is_find_name = False
+
     while not is_find_name:
-
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit(0)
             elif event.type == pygame.KEYDOWN:
-                if event.unicode.isalpha():
-                    name += event.unicode
+                if event.unicode.isalpha() or event.unicode.isdigit():
+                    if name == 'Enter name: ':
+                        name = event.unicode
+                    else:
+                        name += event.unicode
                 elif event.key == pygame.K_BACKSPACE:
                     name = name[:-1]
                 elif event.key == pygame.K_SPACE:
@@ -141,6 +143,29 @@ def draw_intro():
         pygame.display.update()
     screen.fill(BLACK)
 
+def draw_game_over():
+    my_image = pygame.image.load('images\\wallpaper.jpg')
+    my_font = pygame.font.SysFont('Arial Black', 60)
+    text_game_over = my_font.render('Game over!', True, WHITE)
+    text_score = my_font.render(f'Your score:', True, WHITE)
+    BEST_SCORE = BEST_USERS[0][1]
+
+    if SCORE > BEST_SCORE:
+        text = 'New Record!!!'
+    elif SCORE == BEST_SCORE:
+        text = f'Record: {BEST_SCORE}'
+    text_record = my_font.render(text, True, WHITE)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+        screen.fill(BLACK)
+        screen.blit(text_game_over, (120, 260))
+        screen.blit(text_score, (120, 360))
+        screen.blit(text_record, (290, 460))
+        screen.blit(pygame.transform.scale(my_image, [1920, 1080]), [0, -200])
+        pygame.display.update()
 
 draw_intro()
 
@@ -149,33 +174,37 @@ draw_intro()
 
 draw_interface(SCORE)
 pygame.display.update()
-while is_zero_in_mas(mas) or can_move(mas):
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit(0)
+# while is_zero_in_mas(mas) or can_move(mas):
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             pygame.quit()
+#             sys.exit(0)
+#
+#         elif event.type == pygame.KEYDOWN:
+#             delta = 0
+#             if event.key == pygame.K_LEFT:
+#                 mas, delta = move_left(mas)
+#                 sound_effect.play()
+#             elif event.key == pygame.K_RIGHT:
+#                 mas, delta = move_right(mas)
+#                 sound_effect.play()
+#             elif event.key == pygame.K_UP:
+#                 mas, delta = move_up(mas)
+#                 sound_effect.play()
+#             elif event.key == pygame.K_DOWN:
+#                 mas, delta = move_down(mas)
+#                 sound_effect.play()
+#             SCORE += delta
+#
+#             if is_zero_in_mas(mas):
+#                 empty = get_empty_list(mas)
+#                 random.shuffle(empty)
+#                 random_num = empty.pop()
+#                 x, y = get_index_from_number(random_num)
+#                 mas = insert_2_or_4(mas, x, y)
+#                 print(f'Заполнен элемент под номером: {random_num}')
+#             draw_interface(SCORE, delta)
+#             pygame.display.update()
+#     print(USER_NAME)
 
-        elif event.type == pygame.KEYDOWN:
-            delta = 0
-            if event.key == pygame.K_LEFT:
-                mas, delta = move_left(mas)
-                sound_effect.play()
-            elif event.key == pygame.K_RIGHT:
-                mas, delta = move_right(mas)
-                sound_effect.play()
-            elif event.key == pygame.K_UP:
-                mas, delta = move_up(mas)
-                sound_effect.play()
-            elif event.key == pygame.K_DOWN:
-                mas, delta = move_down(mas)
-                sound_effect.play()
-            SCORE += delta
-            empty = get_empty_list(mas)
-            random.shuffle(empty)
-            random_num = empty.pop()
-            x, y = get_index_from_number(random_num)
-            mas = insert_2_or_4(mas, x, y)
-            print(f'Заполнен элемент под номером: {random_num}')
-            draw_interface(SCORE, delta)
-            pygame.display.update()
-    print(USER_NAME)
+draw_game_over()
