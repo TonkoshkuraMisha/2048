@@ -9,6 +9,14 @@ create table if not exists RECORDS (
     score integer
 )""")
 
+
+def insert_result(name, score):
+    cursor.execute("""
+    insert into RECORDS values (?, ?)
+    """, (name, score))
+    db.commit()
+
+
 def get_best():
     cursor.execute("""
     SELECT name user, max(score) score FROM RECORDS
@@ -19,7 +27,7 @@ def get_best():
     return cursor.fetchall()
 
 
-print(get_best())
+#insert_result('Tolja', 512)
+# print(get_best())
 
-#cursor.close()
-
+# cursor.close()
