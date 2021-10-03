@@ -26,8 +26,7 @@ def get_best():
     """)
     return cursor.fetchall()
 
-
-#insert_result('Tolja', 512)
+# insert_result('Tolja', 512)
 # print(get_best())
 
 # cursor.close()
